@@ -40,8 +40,6 @@ export const photoService = {
         albumId: album._id,
       }));
 
-      console.log(photos[key]);
-
       await Photo.insertMany(photos[key]);
     }
   },

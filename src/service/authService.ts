@@ -39,7 +39,6 @@ export const authService = {
     const { loginOrEmail, password } = params;
 
     if (!loginOrEmail || !password) {
-      console.log("we are here");
       throw new BadRequestError("Some params were not passed");
     }
 
