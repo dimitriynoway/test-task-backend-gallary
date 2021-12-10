@@ -6,7 +6,7 @@ export const PhotoContoller = {
     try {
       const data = { userId: req.userId, limit: Number(req.query.limit) };
 
-      await photoService.loadPhotos(data);
+      await photoService.loadPhotos(req.userId, req.query);
 
       return res.status(201).send({ message: "Users were created successfully" });
     } catch (err) {
@@ -15,13 +15,7 @@ export const PhotoContoller = {
   },
   getPhotos: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data = {
-        ownerId: req.query.ownerId as string,
-        page: Number(req.query.page),
-        maxCount: Number(req.query.maxCount),
-      };
-
-      const photos = await photoService.getPhotos(data);
+      const photos = await photoService.getPhotos(req.query);
 
       return res.status(200).send(photos);
     } catch (err) {

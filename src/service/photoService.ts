@@ -4,17 +4,14 @@ import { User } from "../model/User";
 import { Album } from "../model/Album";
 import { Photo } from "../model/Photo";
 import { BadRequestError } from "../errorHandler/BadRequestError";
-import {
-  GetPhotoPatams,
-  LoadPhotoQuery,
-  Photo as PhotoInterface,
-  PhotoEntity,
-  Photos,
-} from "../interface";
+import { GetPhotoPatams, Photo as PhotoInterface, PhotoEntity, Photos } from "../interface";
 
 export const photoService = {
-  loadPhotos: async (payload: Partial<LoadPhotoQuery>): Promise<void> => {
-    const { limit, userId } = payload;
+  loadPhotos: async (
+    userId: string | undefined,
+    query: Partial<{ limit: string }>
+  ): Promise<void> => {
+    const limit = Number(query.limit);
     const { data } = await axios.get(
       limit
         ? `http://jsonplaceholder.typicode.com/photos?_limit=${limit}`
@@ -52,6 +49,8 @@ export const photoService = {
       throw new BadRequestError("Not all params were passed");
     }
 
+    if (isNaN(+page) || isNaN(+maxCount)) throw new BadRequestError("Invalid params were passed");
+
     if (ownerId) {
       const user = await User.findById(ownerId);
 
@@ -60,7 +59,7 @@ export const photoService = {
       const photos: PhotoEntity[] = await Photo.find(
         { owner: ownerId },
         {},
-        { skip: (page - 1) * PAGE_SIZE, limit: maxCount }
+        { skip: (+page - 1) * PAGE_SIZE, limit: +maxCount }
       );
 
       return photos;
@@ -68,7 +67,7 @@ export const photoService = {
     const photos: PhotoEntity[] = await Photo.find(
       {},
       {},
-      { skip: (page - 1) * PAGE_SIZE, limit: maxCount }
+      { skip: (+page - 1) * PAGE_SIZE, limit: +maxCount }
     );
 
     return photos;

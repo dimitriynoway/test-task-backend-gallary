@@ -32,8 +32,8 @@ export interface Photos {
 
 export interface GetPhotoPatams {
   ownerId?: string;
-  page: number;
-  maxCount: number;
+  page: string;
+  maxCount: string;
 }
 
 export interface AlbumEntity {
@@ -62,4 +62,9 @@ export interface DeleteAlbumQuery {
 export interface LoadPhotoQuery {
   userId: string;
   limit?: number;
+}
+
+export interface LoadPhoto {
+  userId: string | undefined;
+  query: Partial<{ limit: string }>;
 }
