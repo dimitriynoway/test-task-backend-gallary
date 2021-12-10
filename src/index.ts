@@ -2,7 +2,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { authRouter, photoRouter, albumRouter } from "./route";
+import { authRouter, photoRouter, albumRouter, notExistedRouteHandler } from "./route";
 import { errorHandler } from "./errorHandler";
 
 dotenv.config();
@@ -17,7 +17,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRouter);
 app.use("/photo", photoRouter);
 app.use("/album", albumRouter);
+
 app.use(errorHandler);
+app.use("*", notExistedRouteHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on: http://${HOSTNAME}:${PORT}`);
